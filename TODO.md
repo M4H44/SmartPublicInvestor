@@ -26,3 +26,5 @@
 - [ ] Upratať balíčky: cli/, domain/, engine/, io/
 "@
 
+
+- [x] Dnes: pridaný plán prác (TODO.md)
