@@ -1,65 +1,93 @@
 package com.smartpublicinvestor;
 
+import com.smartpublicinvestor.domain.EtfAktivum;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
  * Smart Public Investor – konzolová appka (verzia 0.1).
- * Zatiaľ iba jednoduché menu na ukážku štruktúry programu.
  */
 public class App {
 
-    // Jeden spoločný Scanner pre celú triedu App.
-    // private  -> prístupný len v tejto triede
-    // static   -> môžeme ho používať v statickej main() bez vytvárania objektu App
-    // final    -> odkaz na Scanner sa už nebude meniť
     private static final Scanner sc = new Scanner(System.in);
 
-    /**
-     * Vstupný bod programu – odtiaľto sa všetko spúšťa.
-     */
+    // Jednoduchý in-memory katalóg ETF (na MVP stačí)
+    private static final List<EtfAktivum> etfKatalog = new ArrayList<>();
+
     public static void main(String[] args) {
-        // Úvodná hlavička programu (iba informatívny výpis)
         System.out.println("=== Smart Public Investor v0.1 ===");
-
-        // Nekonečný cyklus zobrazujúci menu, kým používateľ nezvolí ukončenie (0)
         while (true) {
-            // Vypíš možnosti do konzoly volame metodu
             vypisMenu();
-
-            // Prečítaj celý riadok od používateľa a odstran prazdne znaky zo začiatku/konca
             String volba = sc.nextLine().trim();
-
-            // Rozhodovanie podľa zadanej voľby (moderný switch s '->', bez fall-through-netreba break)
             switch (volba) {
-                case "1" -> zobrazOProjekte();        // ak zadá "1", vypíš info o projekte
-                case "0" -> {                         // ak zadá "0", ukonči program
-                    System.out.println("Dovidenia.");
-                    return;                           // return v main() = koniec programu
-                }
-                default -> System.out.println("Neplatná voľba, skús znova."); // iné vstupy
+                case "1" -> zobrazOProjekte();
+                case "2" -> pridajEtf();
+                case "3" -> zobrazEtf();
+                case "0" -> { System.out.println("Dovidenia."); return; }
+                default -> System.out.println("Neplatná voľba, skús znova.");
             }
-            // po vykonaní case "1" alebo default sa cyklus opakuje a menu sa zobrazí znova
         }
     }
 
-    /**
-     * Metóda vypíše jednoduché menu možností pre používateľa.
-     */
     private static void vypisMenu() {
         System.out.println();
-        System.out.println("1) O projekte"); // ukáže základný popis toho, čo appka robí
-        System.out.println("0) Koniec");     // ukončenie programu
-        System.out.print("Zvoľ akciu: ");    // kurzor ostane na riadku – čaká na vstup
+        System.out.println("1) O projekte");
+        System.out.println("2) Pridať ETF");
+        System.out.println("3) Zobraziť všetky ETF");
+        System.out.println("0) Koniec");
+        System.out.print("Zvoľ akciu: ");
     }
 
-    /**
-     * Metóda vypíše popis cieľa projektu – zatiaľ informačne.
-     */
     private static void zobrazOProjekte() {
         System.out.println("""
                 Cieľ: plánovanie pravidelného investovania (DCA) do ETF,
                 evidencia poplatkov a simulácia vývoja.
                 Postupne pribudne odporúčanie brokera podľa profilu používateľa.
                 """);
+    }
+
+    private static void pridajEtf() {
+        System.out.print("Zadaj ISIN: ");
+        String isin = sc.nextLine().trim().toUpperCase();
+        if (isin.isEmpty()) {
+            System.out.println("ISIN nesmie byť prázdny.");
+            return;
+        }
+        // kontrola duplicity podľa ISIN
+        boolean existuje = etfKatalog.stream().anyMatch(e -> e.getIsin().equalsIgnoreCase(isin));
+        if (existuje) {
+            System.out.println("ETF s týmto ISIN už existuje.");
+            return;
+        }
+
+        System.out.print("Zadaj názov ETF: ");
+        String nazov = sc.nextLine().trim();
+        if (nazov.isEmpty()) {
+            System.out.println("Názov nesmie byť prázdny.");
+            return;
+        }
+
+        System.out.print("Zadaj menu (EUR/USD/CZK/GBP): ");
+        String mena = sc.nextLine().trim().toUpperCase();
+        if (!(mena.equals("EUR") || mena.equals("USD") || mena.equals("CZK") || mena.equals("GBP"))) {
+            System.out.println("Nepodporovaná mena. Skús EUR, USD, CZK alebo GBP.");
+            return;
+        }
+
+        etfKatalog.add(new EtfAktivum(isin, nazov, mena));
+        System.out.println("ETF pridané.");
+    }
+
+    private static void zobrazEtf() {
+        if (etfKatalog.isEmpty()) {
+            System.out.println("Zoznam ETF je prázdny.");
+            return;
+        }
+        System.out.println("--- ETF v zozname ---");
+        for (int i = 0; i < etfKatalog.size(); i++) {
+            System.out.println((i + 1) + ") " + etfKatalog.get(i));
+        }
     }
 }
