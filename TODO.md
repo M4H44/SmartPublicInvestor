@@ -1,9 +1,9 @@
 ﻿# TODO – SmartPublicInvestor
 
 ## MVP (jadro) – začiatok
-- [ ] Trieda **EtfAktivum** (ISIN, názov, mena) + 	oString(), equals(), hashCode()
-- [ ] Trieda **Pozicia** (asset, množstvo, priemerná nákupná cena) + uy(qty, price, fee)
-- [ ] **Portfolio** (ISIN -> Pozicia) + uy(isin, qty, price, fee)
+- [X] Trieda **EtfAktivum** (ISIN, názov, mena) + 	oString(), equals(), hashCode()
+- [X] Trieda **Pozicia** (asset, množstvo, priemerná nákupná cena) + uy(qty, price, fee)
+- [X] **Portfolio** (ISIN -> Pozicia) + uy(isin, qty, price, fee)
 - [ ] **CLI**: pridať ETF, zobraziť ETF, kúpiť do portfólia, zobraziť portfólio
 - [ ] **FeeModel** (fixed + % + min) + jednoduché nastavenie v CLI
 - [ ] Uloženie/načítanie **JSON** (ETF, portfólio)
