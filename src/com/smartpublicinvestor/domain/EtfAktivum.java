@@ -23,7 +23,7 @@ public class EtfAktivum {
 
     @Override
     public String toString() {
-        return isin + " | " + nazov + " | " + mena;//vypis
+        return isin + " | " + nazov + " | " + mena;
     }
 
     // Identita podľa ISIN (case-insensitive)
